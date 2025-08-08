@@ -2,41 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Verity Design System - Truth-focused, trustworthy, blockchain-enabled */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 248 100% 99%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 215 85% 45%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 215 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 215 25% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 30% 90%;
+    --input: 210 30% 90%;
+    --ring: 215 85% 45%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Verity Brand Colors */
+    --verity-blue: 215 85% 45%;
+    --verity-blue-light: 215 85% 65%;
+    --verity-blue-dark: 215 85% 35%;
+    
+    --trust-green: 142 76% 36%;
+    --trust-green-light: 142 76% 50%;
+    
+    --verify-gold: 45 93% 47%;
+    --verify-gold-light: 45 93% 60%;
+    
+    --warning-orange: 25 95% 53%;
+    --danger-red: 0 72% 51%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--verity-blue)), hsl(var(--verity-blue-light)));
+    --gradient-trust: linear-gradient(135deg, hsl(var(--trust-green)), hsl(var(--trust-green-light)));
+    --gradient-verify: linear-gradient(135deg, hsl(var(--verify-gold)), hsl(var(--verify-gold-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--verity-blue-dark)), hsl(var(--verity-blue)), hsl(var(--trust-green)));
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(var(--verity-blue) / 0.08);
+    --shadow-elevated: 0 8px 25px -8px hsl(var(--verity-blue) / 0.15);
+    --shadow-glow: 0 0 20px hsl(var(--verity-blue) / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +83,44 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 215 30% 8%;
+    --foreground: 210 40% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 215 30% 10%;
+    --card-foreground: 210 40% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 215 30% 10%;
+    --popover-foreground: 210 40% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 215 85% 55%;
+    --primary-foreground: 215 30% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 20% 15%;
+    --secondary-foreground: 210 40% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 20% 15%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 215 20% 15%;
+    --accent-foreground: 210 40% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 215 85% 55%;
+
+    /* Dark mode brand colors */
+    --verity-blue: 215 85% 55%;
+    --verity-blue-light: 215 85% 70%;
+    --verity-blue-dark: 215 85% 40%;
+    
+    --trust-green: 142 76% 45%;
+    --trust-green-light: 142 76% 60%;
+    
+    --verify-gold: 45 93% 55%;
+    --verify-gold-light: 45 93% 70%;
   }
 }
 
@@ -101,5 +131,34 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Verity Components */
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-verity-blue via-trust-green to-verify-gold bg-clip-text text-transparent;
+  }
+  
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border-border/50;
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .trust-indicator {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .trust-verified {
+    @apply trust-indicator bg-trust-green/10 text-trust-green border border-trust-green/20;
+  }
+  
+  .trust-pending {
+    @apply trust-indicator bg-verify-gold/10 text-verify-gold border border-verify-gold/20;
+  }
+  
+  .trust-disputed {
+    @apply trust-indicator bg-destructive/10 text-destructive border border-destructive/20;
   }
 }

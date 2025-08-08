@@ -61,7 +61,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Verity Brand Colors
+				'verity-blue': {
+					DEFAULT: 'hsl(var(--verity-blue))',
+					light: 'hsl(var(--verity-blue-light))',
+					dark: 'hsl(var(--verity-blue-dark))'
+				},
+				'trust-green': {
+					DEFAULT: 'hsl(var(--trust-green))',
+					light: 'hsl(var(--trust-green-light))'
+				},
+				'verify-gold': {
+					DEFAULT: 'hsl(var(--verify-gold))',
+					light: 'hsl(var(--verify-gold-light))'
+				},
+				'warning-orange': 'hsl(var(--warning-orange))',
+				'danger-red': 'hsl(var(--danger-red))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
