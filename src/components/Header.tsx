@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, User, Wallet, Shield, Vote } from "lucide-react";
+import { Search, Plus, User, Wallet, Shield, Vote, BookOpen, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   vrtBalance: number;
@@ -11,19 +13,54 @@ interface HeaderProps {
 }
 
 export const Header = ({ vrtBalance, reputation, onConnectWallet, onSubmitPost }: HeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-50 glass-card border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-verity-blue to-trust-green flex items-center justify-center">
-              <Shield className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-4">
+            <div 
+              className="flex items-center space-x-2 cursor-pointer" 
+              onClick={() => navigate("/")}
+            >
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-verity-blue to-trust-green flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">Verity</h1>
+                <p className="text-xs text-muted-foreground">Decentralized Truth</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold gradient-text">Verity</h1>
-              <p className="text-xs text-muted-foreground">Decentralized Truth</p>
-            </div>
+
+            {/* Navigation Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="ml-4">
+                  <Menu className="w-4 h-4 mr-2" />
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="glass-card">
+                <DropdownMenuItem onClick={() => navigate("/")}>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Home
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/mechanisms")}>
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  How It Works
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/submit")}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Submit Claim
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Search Bar */}
@@ -55,7 +92,7 @@ export const Header = ({ vrtBalance, reputation, onConnectWallet, onSubmitPost }
 
             {/* Submit Post Button */}
             <Button 
-              onClick={onSubmitPost}
+              onClick={() => navigate("/submit")}
               className="bg-gradient-to-r from-verity-blue to-trust-green hover:from-verity-blue-dark hover:to-trust-green text-white shadow-lg"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -63,7 +100,12 @@ export const Header = ({ vrtBalance, reputation, onConnectWallet, onSubmitPost }
             </Button>
 
             {/* User Profile */}
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full"
+              onClick={() => navigate("/profile")}
+            >
               <User className="w-4 h-4" />
             </Button>
           </div>

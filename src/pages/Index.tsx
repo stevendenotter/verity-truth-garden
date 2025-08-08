@@ -80,10 +80,7 @@ const Index = () => {
   };
 
   const handleSubmitPost = () => {
-    toast({
-      title: "Submit Claim",
-      description: "Post submission interface coming soon! This will require 1 VRT to post."
-    });
+    // This is now handled by the Header component navigation
   };
 
   const handleVote = (postId: string, isUpvote: boolean) => {
