@@ -51,6 +51,37 @@ const Launch = () => {
     "sameAs": [],
   }), []);
 
+  const faqJsonLd = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I join the ICO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use the Join Whitelist button on the launch page. We'll email steps and KYC details if applicable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where can I try the product?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Click Launch Demo App to use the live MVP right now."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the token utility real?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. VRT gates posting, powers staking and rewards, and grants governance voting rights."
+        }
+      }
+    ]
+  }), []);
+
   const handleWhitelist = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
@@ -68,6 +99,7 @@ const Launch = () => {
   return (
     <div className="min-h-screen bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <main className="container mx-auto px-4 py-10">
         {/* Hero */}
@@ -137,6 +169,60 @@ const Launch = () => {
                 <li className="flex items-center justify-between p-3 bg-muted/30 rounded">Development & Marketing <Badge className="bg-verity-blue/10 text-verity-blue border-verity-blue/20">20%</Badge></li>
                 <li className="flex items-center justify-between p-3 bg-muted/30 rounded">Investors (2-year vest) <Badge className="bg-verify-gold/10 text-verify-gold border-verify-gold/20">10%</Badge></li>
               </ul>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Mechanisms Overview */}
+        <section id="mechanisms-overview" className="mb-10">
+          <Card className="glass-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-verity-blue" /> Mechanisms Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="m1">
+                  <AccordionTrigger>Truth‑Incentivized Voting</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Stake: 10 VRT per vote. Outcome by weighted consensus: <code>O = round(ΣW_i / ΣR_i)</code>.</li>
+                      <li>Redistribution pool: <code>P = Σ(γ · S_i)</code>, with <code>γ = 0.2</code>.</li>
+                      <li>Reward share: <code>B_i = P · (R_i / ΣR_j)</code>. Example reward ≈ 0.857 VRT for correct voters.</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="m2">
+                  <AccordionTrigger>Reputation System</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Start at <code>R = 50</code>.</li>
+                      <li>Correct vote: <code>R' = R + 0.05 · (100 − R)</code>.</li>
+                      <li>Incorrect vote: <code>R' = R − 0.1 · R</code>.</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="m3">
+                  <AccordionTrigger>Token‑Gated Participation</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>1 VRT required to post/comment/like; optional 0.1 VRT action fees.</li>
+                      <li>Aligns contribution quality with economic skin‑in‑the‑game.</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="m4">
+                  <AccordionTrigger>Decentralized Governance</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li><code>1 VRT = 1 vote</code>; proposals require 20% quorum.</li>
+                      <li>Community controls policy, parameters, and treasury.</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              <div className="mt-4 flex justify-end">
+                <Button variant="ghost" onClick={() => navigate("/mechanisms")}>Deep dive into mechanisms →</Button>
+              </div>
             </CardContent>
           </Card>
         </section>
