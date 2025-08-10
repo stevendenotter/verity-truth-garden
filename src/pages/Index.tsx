@@ -111,7 +111,18 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* Background decorations */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute -top-20 -right-10 h-[480px] w-[680px] rounded-full blur-3xl opacity-30"
+          style={{ background: "radial-gradient(ellipse at center, hsl(var(--primary)/0.35) 0%, transparent 60%)" }}
+        />
+        <div
+          className="absolute -bottom-24 -left-10 h-[400px] w-[600px] rounded-full blur-3xl opacity-25"
+          style={{ background: "radial-gradient(ellipse at center, hsl(var(--accent)/0.30) 0%, transparent 60%)" }}
+        />
+      </div>
       <Header 
         vrtBalance={userStats.vrtBalance}
         reputation={userStats.reputation}
@@ -123,22 +134,22 @@ const Index = () => {
         <Hero onGetStarted={handleGetStarted} />
       )}
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 animate-fade-in">
         {/* Platform Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="glass-card p-4 text-center">
+          <div className="glass-card p-4 text-center hover-scale animate-fade-in">
             <div className="text-2xl font-bold text-verity-blue mb-1">15,234</div>
             <div className="text-sm text-muted-foreground">Claims Verified</div>
           </div>
-          <div className="glass-card p-4 text-center">
+          <div className="glass-card p-4 text-center hover-scale animate-fade-in">
             <div className="text-2xl font-bold text-trust-green mb-1">1.2M</div>
             <div className="text-sm text-muted-foreground">VRT Staked</div>
           </div>
-          <div className="glass-card p-4 text-center">
+          <div className="glass-card p-4 text-center hover-scale animate-fade-in">
             <div className="text-2xl font-bold text-verify-gold mb-1">25,891</div>
             <div className="text-sm text-muted-foreground">Active Verifiers</div>
           </div>
-          <div className="glass-card p-4 text-center">
+          <div className="glass-card p-4 text-center hover-scale animate-fade-in">
             <div className="text-2xl font-bold gradient-text mb-1">98.5%</div>
             <div className="text-sm text-muted-foreground">Accuracy Rate</div>
           </div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   ArrowUp, 
   ArrowDown, 
@@ -64,13 +65,22 @@ export const PostCard = ({ post, onVote, onStake }: PostCardProps) => {
   };
 
   const consensusPercentage = (post.votesFor / (post.votesFor + post.votesAgainst)) * 100;
+  const initials = post.author
+    .split(' ')
+    .map((s) => s[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
-    <Card className="glass-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-verity-blue">
+    <Card className="glass-card hover:shadow-lg transition-all duration-300 border-l-4 border-l-verity-blue animate-fade-in hover-scale">
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start gap-3">
+          <Avatar className="h-10 w-10 ring-1 ring-border/60">
+            <AvatarFallback className="bg-muted text-foreground/80 text-sm">{initials}</AvatarFallback>
+          </Avatar>
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-1">
               <Badge variant="outline" className="text-xs">
                 {post.category}
               </Badge>
@@ -79,11 +89,11 @@ export const PostCard = ({ post, onVote, onStake }: PostCardProps) => {
                 {post.timestamp}
               </span>
             </div>
-            <h3 className="font-semibold text-lg leading-tight mb-2 hover:text-verity-blue cursor-pointer">
+            <h3 className="font-semibold text-lg leading-tight mb-1 story-link cursor-pointer">
               {post.title}
             </h3>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>by {post.author}</span>
+              <span className="font-medium">{post.author}</span>
               <Badge variant="secondary" className="bg-trust-green/10 text-trust-green border-trust-green/20">
                 Rep: {post.authorReputation}
               </Badge>
