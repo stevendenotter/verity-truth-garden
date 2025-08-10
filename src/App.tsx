@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Mechanisms from "./pages/Mechanisms";
 import Submit from "./pages/Submit";
 import Profile from "./pages/Profile";
+import Launch from "./pages/Launch";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/launch" element={<Launch />} />
           <Route path="/mechanisms" element={<Mechanisms />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/profile" element={<Profile />} />

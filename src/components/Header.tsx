@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, User, Wallet, Shield, Vote, BookOpen, Menu } from "lucide-react";
+import { Search, Plus, User, Wallet, Shield, Vote, BookOpen, Menu, Coins } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -46,6 +46,10 @@ export const Header = ({ vrtBalance, reputation, onConnectWallet, onSubmitPost }
                 <DropdownMenuItem onClick={() => navigate("/")}>
                   <Shield className="w-4 h-4 mr-2" />
                   Home
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/launch")}>
+                  <Coins className="w-4 h-4 mr-2" />
+                  Token Launch
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/mechanisms")}>
                   <BookOpen className="w-4 h-4 mr-2" />

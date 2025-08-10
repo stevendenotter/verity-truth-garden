@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import { useNavigate } from "react-router-dom";
 
 interface HeroProps {
   onGetStarted: () => void;
 }
 
 export const Hero = ({ onGetStarted }: HeroProps) => {
+  const navigate = useNavigate();
   return (
     <section 
       className="relative min-h-[600px] flex items-center justify-center overflow-hidden"
@@ -72,6 +74,7 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               variant="outline" 
               size="lg"
               className="border-white/30 text-white hover:bg-white/10 text-lg px-8"
+              onClick={() => navigate("/launch")}
             >
               Learn About VRT
             </Button>
