@@ -29,6 +29,7 @@ interface Post {
   votesAgainst: number;
   comments: number;
   consensusScore: number;
+  rewardPool: number;
 }
 
 interface PostCardProps {
@@ -107,7 +108,7 @@ export const PostCard = ({ post, onVote, onStake }: PostCardProps) => {
           {post.content}
         </p>
 
-        {/* Consensus & Staking Info */}
+        {/* Consensus & Reward Info */}
         <div className="flex items-center justify-between mb-3 text-xs">
           <div className="flex items-center gap-3">
             <span className="text-muted-foreground">
@@ -116,6 +117,9 @@ export const PostCard = ({ post, onVote, onStake }: PostCardProps) => {
             <span className="text-muted-foreground">
               <DollarSign className="w-3 h-3 inline text-verify-gold" />
               <span className="text-verify-gold font-medium">{post.vrtStaked} VRT</span>
+            </span>
+            <span className="text-muted-foreground">
+              Reward: <span className="text-trust-green font-medium">{post.rewardPool.toFixed(1)} VRT</span>
             </span>
           </div>
           <div className="text-muted-foreground">

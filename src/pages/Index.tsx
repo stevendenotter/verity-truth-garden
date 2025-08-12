@@ -25,7 +25,8 @@ const mockPosts = [
     votesFor: 127,
     votesAgainst: 23,
     comments: 45,
-    consensusScore: 84.7
+    consensusScore: 84.7,
+    rewardPool: 25.0 // 20% of 1250 staked
   },
   {
     id: "2", 
@@ -40,7 +41,8 @@ const mockPosts = [
     votesFor: 289,
     votesAgainst: 12,
     comments: 67,
-    consensusScore: 96.0
+    consensusScore: 96.0,
+    rewardPool: 42.0 // 20% of 2100 staked
   },
   {
     id: "3",
@@ -55,7 +57,8 @@ const mockPosts = [
     votesFor: 45,
     votesAgainst: 134,
     comments: 89,
-    consensusScore: 25.1
+    consensusScore: 25.1,
+    rewardPool: 17.8 // 20% of 890 staked
   }
 ];
 
@@ -69,8 +72,16 @@ const Index = () => {
   const [selectedPost, setSelectedPost] = useState<typeof mockPosts[0] | null>(null);
   const [activeTab, setActiveTab] = useState("trending");
   const [showHero, setShowHero] = useState(true);
+  const [posts, setPosts] = useState(mockPosts);
   
   const { toast } = useToast();
+
+  // Calculate reward based on stake and reputation using Verity formula
+  const calculateReward = (stakeAmount: number, userReputation: number, rewardPool: number) => {
+    // B_i = P × (R_i / ∑R_j) - simplified for demo
+    const reputationWeight = userReputation / 100; // normalize reputation
+    return (rewardPool * reputationWeight * (stakeAmount / 100)).toFixed(2);
+  };
 
   const handleConnectWallet = () => {
     toast({
@@ -93,34 +104,46 @@ const Index = () => {
       return;
     }
 
-    // Update user balance
+    const targetPost = posts.find(p => p.id === postId);
+    if (!targetPost) return;
+
+    // Calculate reward for correct vote (demo logic)
+    const potentialReward = calculateReward(10, userStats.reputation, targetPost.rewardPool);
+    const isCorrectVote = Math.random() > 0.3; // 70% chance of being on winning side
+
+    // Update posts state
+    setPosts(prevPosts => 
+      prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            votesFor: isUpvote ? post.votesFor + 1 : post.votesFor,
+            votesAgainst: !isUpvote ? post.votesAgainst + 1 : post.votesAgainst,
+            vrtStaked: post.vrtStaked + 10,
+            rewardPool: post.rewardPool + 2 // 20% of new stake
+          };
+        }
+        return post;
+      })
+    );
+
+    // Update user stats
     setUserStats(prev => ({ 
       ...prev, 
-      vrtBalance: prev.vrtBalance - 10,
-      reputation: isUpvote ? prev.reputation + 0.5 : Math.max(10, prev.reputation - 1)
+      vrtBalance: prev.vrtBalance - 10 + (isCorrectVote ? parseFloat(potentialReward) : 0),
+      reputation: isCorrectVote ? Math.min(100, prev.reputation + 0.5) : Math.max(10, prev.reputation - 1)
     }));
-
-    // Update post votes
-    const updatedPosts = mockPosts.map(post => {
-      if (post.id === postId) {
-        return {
-          ...post,
-          votesFor: isUpvote ? post.votesFor + 1 : post.votesFor,
-          votesAgainst: !isUpvote ? post.votesAgainst + 1 : post.votesAgainst,
-          vrtStaked: post.vrtStaked + 10
-        };
-      }
-      return post;
-    });
 
     toast({
       title: isUpvote ? "Verification Vote Cast" : "Dispute Vote Cast",
-      description: `You voted to ${isUpvote ? 'verify' : 'dispute'} this claim. 10 VRT staked.`
+      description: isCorrectVote 
+        ? `Correct vote! You earned ${potentialReward} VRT reward.`
+        : `Vote recorded. Result pending consensus.`
     });
   };
 
   const handleStake = (postId: string) => {
-    const post = mockPosts.find(p => p.id === postId);
+    const post = posts.find(p => p.id === postId);
     if (post) {
       setSelectedPost(post);
       setShowStaking(true);
@@ -130,18 +153,23 @@ const Index = () => {
   const handleStakeSubmit = (amount: number, side: 'verify' | 'dispute') => {
     if (!selectedPost) return;
     
-    // Update post with new stake
-    const updatedPosts = mockPosts.map(post => {
-      if (post.id === selectedPost.id) {
-        return {
-          ...post,
-          vrtStaked: post.vrtStaked + amount,
-          votesFor: side === 'verify' ? post.votesFor + 1 : post.votesFor,
-          votesAgainst: side === 'dispute' ? post.votesAgainst + 1 : post.votesAgainst
-        };
-      }
-      return post;
-    });
+    const potentialReward = calculateReward(amount, userStats.reputation, selectedPost.rewardPool);
+    
+    // Update posts state
+    setPosts(prevPosts => 
+      prevPosts.map(post => {
+        if (post.id === selectedPost.id) {
+          return {
+            ...post,
+            vrtStaked: post.vrtStaked + amount,
+            votesFor: side === 'verify' ? post.votesFor + 1 : post.votesFor,
+            votesAgainst: side === 'dispute' ? post.votesAgainst + 1 : post.votesAgainst,
+            rewardPool: post.rewardPool + (amount * 0.2) // Add 20% to reward pool
+          };
+        }
+        return post;
+      })
+    );
 
     setUserStats(prev => ({ ...prev, vrtBalance: prev.vrtBalance - amount }));
     setShowStaking(false);
@@ -149,7 +177,7 @@ const Index = () => {
     
     toast({
       title: "Stake Placed Successfully",
-      description: `${amount} VRT staked to ${side} the claim. Good luck!`
+      description: `${amount} VRT staked to ${side}. Potential reward: ${potentialReward} VRT`
     });
   };
 
@@ -158,13 +186,10 @@ const Index = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Background decorations */}
+    <div className="min-h-screen bg-background">
+      {/* Minimal background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute -top-40 -right-20 h-[300px] w-[400px] rounded-full blur-3xl opacity-20"
-          style={{ background: "radial-gradient(ellipse at center, hsl(var(--primary)/0.25) 0%, transparent 70%)" }}
-        />
+        <div className="absolute top-0 right-0 h-[200px] w-[300px] rounded-full blur-3xl opacity-10 bg-primary/20" />
       </div>
       <Header 
         vrtBalance={userStats.vrtBalance}
@@ -177,74 +202,30 @@ const Index = () => {
         <Hero onGetStarted={handleGetStarted} />
       )}
 
-      <main className="container mx-auto px-4 py-8 animate-fade-in">
-        {/* Platform Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-card/50 backdrop-blur-sm border border-border/40 p-3 text-center rounded-lg">
-            <div className="text-lg font-bold text-verity-blue mb-1">15,234</div>
-            <div className="text-xs text-muted-foreground">Claims Verified</div>
+      <main className="container mx-auto px-4 py-6 max-w-2xl">
+        {/* Minimal Stats */}
+        <div className="flex justify-between items-center mb-6 p-3 bg-muted/30 rounded-lg">
+          <div className="text-sm">
+            <span className="text-muted-foreground">Claims:</span> <span className="font-medium">15,234</span>
           </div>
-          <div className="bg-card/50 backdrop-blur-sm border border-border/40 p-3 text-center rounded-lg">
-            <div className="text-lg font-bold text-trust-green mb-1">1.2M</div>
-            <div className="text-xs text-muted-foreground">VRT Staked</div>
+          <div className="text-sm">
+            <span className="text-muted-foreground">Staked:</span> <span className="font-medium text-verify-gold">1.2M VRT</span>
           </div>
-          <div className="bg-card/50 backdrop-blur-sm border border-border/40 p-3 text-center rounded-lg">
-            <div className="text-lg font-bold text-verify-gold mb-1">25,891</div>
-            <div className="text-xs text-muted-foreground">Active Verifiers</div>
-          </div>
-          <div className="bg-card/50 backdrop-blur-sm border border-border/40 p-3 text-center rounded-lg">
-            <div className="text-lg font-bold text-foreground mb-1">98.5%</div>
-            <div className="text-xs text-muted-foreground">Accuracy Rate</div>
+          <div className="text-sm">
+            <span className="text-muted-foreground">Accuracy:</span> <span className="font-medium text-trust-green">98.5%</span>
           </div>
         </div>
 
-        {/* Key Mechanisms */}
-        <div className="mb-6 bg-card/30 backdrop-blur-sm border border-border/30 rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-3 text-foreground">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
-            <div className="flex items-start gap-2">
-              <div className="w-5 h-5 rounded-full bg-trust-green/20 text-trust-green flex items-center justify-center text-xs font-bold">1</div>
-              <div>
-                <div className="font-medium text-foreground">Stake VRT</div>
-                <div className="text-muted-foreground">Vote with 10+ VRT to verify or dispute claims</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <div className="w-5 h-5 rounded-full bg-verify-gold/20 text-verify-gold flex items-center justify-center text-xs font-bold">2</div>
-              <div>
-                <div className="font-medium text-foreground">Earn Rewards</div>
-                <div className="text-muted-foreground">Correct votes earn ~8.57% returns</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <div className="w-5 h-5 rounded-full bg-verity-blue/20 text-verity-blue flex items-center justify-center text-xs font-bold">3</div>
-              <div>
-                <div className="font-medium text-foreground">Build Rep</div>
-                <div className="text-muted-foreground">Reputation affects voting weight & rewards</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Tabs */}
+        {/* Simple Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-card/50 backdrop-blur-sm border border-border/30">
-            <TabsTrigger value="trending" className="text-sm">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              Trending
-            </TabsTrigger>
-            <TabsTrigger value="recent" className="text-sm">
-              <Clock className="w-4 h-4 mr-1" />
-              Recent
-            </TabsTrigger>
-            <TabsTrigger value="verified" className="text-sm">
-              <Shield className="w-4 h-4 mr-1" />
-              Verified
-            </TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 bg-muted/50">
+            <TabsTrigger value="trending" className="text-sm">Trending</TabsTrigger>
+            <TabsTrigger value="recent" className="text-sm">Recent</TabsTrigger>
+            <TabsTrigger value="verified" className="text-sm">Verified</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="trending" className="space-y-4 mt-4">
-            {mockPosts.map((post) => (
+          <TabsContent value="trending" className="space-y-3 mt-4">
+            {posts.map((post) => (
               <PostCard
                 key={post.id}
                 post={post}
@@ -254,8 +235,8 @@ const Index = () => {
             ))}
           </TabsContent>
 
-          <TabsContent value="recent" className="space-y-4 mt-4">
-            {[...mockPosts].reverse().map((post) => (
+          <TabsContent value="recent" className="space-y-3 mt-4">
+            {[...posts].reverse().map((post) => (
               <PostCard
                 key={post.id}
                 post={post}
@@ -265,8 +246,8 @@ const Index = () => {
             ))}
           </TabsContent>
 
-          <TabsContent value="verified" className="space-y-4 mt-4">
-            {mockPosts.filter(post => post.verificationStatus === 'verified').map((post) => (
+          <TabsContent value="verified" className="space-y-3 mt-4">
+            {posts.filter(post => post.verificationStatus === 'verified').map((post) => (
               <PostCard
                 key={post.id}
                 post={post}
